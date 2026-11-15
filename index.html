@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      name="description"
+      content="Learn how to identify phishing, digital arrest scams and AI-generated fake news."
+    />
+    <title>CyberShield Awareness</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="CyberShield home">
+        <span class="brand-icon">CS</span>
+        <span>CyberShield</span>
+      </a>
+
+      <button
+        id="menuButton"
+        class="menu-button"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        Menu
+      </button>
+
+      <nav id="navigation" class="navigation" aria-label="Main navigation">
+        <a href="#learn">Learn</a>
+        <a href="#analyzer">Analyzer</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#report">Report</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Think before you click, pay, or share</p>
+          <h1>Recognize online deception before it harms you.</h1>
+
+          <p class="hero-description">
+            Learn to detect phishing messages, digital-arrest scams and
+            AI-generated fake news through practical examples.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary-button" href="#learn">
+              Start learning
+            </a>
+
+            <a class="button secondary-button" href="#analyzer">
+              Check a message
+            </a>
+          </div>
+
+          <p class="emergency-note">
+            If money has been stolen in India, contact your bank immediately
+            and call the national cybercrime helpline at <strong>1930</strong>.
+          </p>
+        </div>
+
+        <aside class="safety-panel" aria-label="Immediate safety checklist">
+          <span class="status-badge">Safety checklist</span>
+          <h2>Pause and verify</h2>
+
+          <ul class="check-list">
+            <li>Do not share OTPs, PINs, passwords or screen access.</li>
+            <li>Do not install applications requested by unknown callers.</li>
+            <li>Verify claims through an independently found official number.</li>
+            <li>Save screenshots, numbers, links and transaction details.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section id="learn" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Threat awareness</p>
+          <h2>Understand the warning signs</h2>
+          <p>
+            Scammers create urgency, fear or curiosity so that you act before
+            checking the facts.
+          </p>
+        </div>
+
+        <div class="card-grid">
+          <article class="threat-card">
+            <span class="card-number">01</span>
+            <h3>Phishing</h3>
+
+            <p>
+              Fraudulent emails, messages or websites that impersonate trusted
+              organizations to steal information.
+            </p>
+
+            <ul>
+              <li>Unexpected login or payment request</li>
+              <li>Misspelled or unrelated website address</li>
+              <li>Pressure to act immediately</li>
+              <li>Request for passwords, OTPs or card information</li>
+            </ul>
+          </article>
+
+          <article class="threat-card">
+            <span class="card-number">02</span>
+            <h3>Digital-arrest scam</h3>
+
+            <p>
+              Criminals impersonate police, courts or government agencies and
+              falsely accuse victims of crimes.
+            </p>
+
+            <ul>
+              <li>Threat of immediate arrest over a video call</li>
+              <li>Demand for secrecy or continuous surveillance</li>
+              <li>Request to transfer money to a "safe account"</li>
+              <li>Fake uniforms, documents or official-looking rooms</li>
+            </ul>
+          </article>
+
+          <article class="threat-card">
+            <span class="card-number">03</span>
+            <h3>AI-generated fake news</h3>
+
+            <p>
+              Manipulated text, images, audio or video designed to imitate
+              credible reporting or public figures.
+            </p>
+
+            <ul>
+              <li>No credible source or original context</li>
+              <li>Emotional headline that demands immediate sharing</li>
+              <li>Unnatural facial, voice or visual details</li>
+              <li>Claim not reported by other reliable outlets</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="analyzer" class="section alternate-section">
+        <div class="two-column">
+          <div>
+            <p class="eyebrow">Message analyzer</p>
+            <h2>Check text for common scam signals</h2>
+
+            <p>
+              Paste a suspicious message below. Analysis occurs in your browser
+              and provides awareness guidance, not a guarantee.
+            </p>
+
+            <form id="analyzerForm" class="form-card">
+              <label for="messageText">Suspicious message</label>
+
+              <textarea
+                id="messageText"
+                rows="8"
+                maxlength="3000"
+                placeholder="Example: Your account will be blocked today. Click this link and verify your OTP..."
+                required
+              ></textarea>
+
+              <button class="button primary-button" type="submit">
+                Analyze message
+              </button>
+            </form>
+          </div>
+
+          <div id="analysisResult" class="result-card" aria-live="polite">
+            <span class="status-badge neutral">Waiting for text</span>
+            <h3>Your result will appear here</h3>
+            <p>
+              The checker looks for urgency, threats, credential requests,
+              suspicious links and payment demands.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Knowledge check</p>
+          <h2>Can you identify a scam?</h2>
+        </div>
+
+        <div id="quizContainer" class="quiz-card">
+          <p id="quizProgress" class="quiz-progress"></p>
+          <h3 id="quizQuestion"></h3>
+          <div id="quizAnswers" class="answer-list"></div>
+          <p id="quizFeedback" class="quiz-feedback" aria-live="polite"></p>
+
+          <button
+            id="nextQuestion"
+            class="button primary-button hidden"
+            type="button"
+          >
+            Next question
+          </button>
+        </div>
+      </section>
+
+      <section id="report" class="section alternate-section">
+        <div class="two-column report-layout">
+          <div>
+            <p class="eyebrow">Awareness report</p>
+            <h2>Record a suspicious incident</h2>
+
+            <p>
+              This demonstration form stores awareness reports in MongoDB. It
+              does not automatically submit a police or government complaint.
+            </p>
+
+            <div class="statistics">
+              <div>
+                <strong id="totalReports">0</strong>
+                <span>Total reports</span>
+              </div>
+
+              <div>
+                <strong id="phishingReports">0</strong>
+                <span>Phishing</span>
+              </div>
+
+              <div>
+                <strong id="scamReports">0</strong>
+                <span>Digital arrest</span>
+              </div>
+
+              <div>
+                <strong id="newsReports">0</strong>
+                <span>Fake news</span>
+              </div>
+            </div>
+          </div>
+
+          <form id="reportForm" class="form-card">
+            <label for="category">Incident category</label>
+            <select id="category" name="category" required>
+              <option value="">Select a category</option>
+              <option value="phishing">Phishing</option>
+              <option value="digital-arrest">Digital-arrest scam</option>
+              <option value="fake-news">AI-generated fake news</option>
+              <option value="other">Other</option>
+            </select>
+
+            <label for="platform">Platform or channel</label>
+            <input
+              id="platform"
+              name="platform"
+              type="text"
+              maxlength="60"
+              placeholder="Email, WhatsApp, social media..."
+            />
+
+            <label for="description">What happened?</label>
+            <textarea
+              id="description"
+              name="description"
+              rows="6"
+              minlength="20"
+              maxlength="1000"
+              placeholder="Describe the warning signs. Do not include passwords, OTPs or banking credentials."
+              required
+            ></textarea>
+
+            <label for="contact">
+              Contact information
+              <span class="optional-text">(optional)</span>
+            </label>
+
+            <input
+              id="contact"
+              name="contact"
+              type="text"
+              maxlength="120"
+              placeholder="Email or phone number"
+            />
+
+            <button class="button primary-button" type="submit">
+              Save report
+            </button>
+
+            <p id="formStatus" class="form-status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        CyberShield is an educational demonstration. Verify urgent claims
+        independently before acting.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

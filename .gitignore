@@ -1,0 +1,352 @@
+const menuButton = document.getElementById("menuButton");
+const navigation = document.getElementById("navigation");
+
+menuButton.addEventListener("click", () => {
+  const isOpen = navigation.classList.toggle("open");
+  menuButton.setAttribute("aria-expanded", String(isOpen));
+});
+
+navigation.addEventListener("click", (event) => {
+  if (event.target.matches("a")) {
+    navigation.classList.remove("open");
+    menuButton.setAttribute("aria-expanded", "false");
+  }
+});
+
+/* Message analyzer */
+
+const analyzerForm = document.getElementById("analyzerForm");
+const messageText = document.getElementById("messageText");
+const analysisResult = document.getElementById("analysisResult");
+
+const riskRules = [
+  {
+    pattern: /\b(urgent|immediately|today|now|last warning|act fast)\b/i,
+    score: 2,
+    message: "The message uses urgency to pressure you."
+  },
+  {
+    pattern: /\b(arrest|police|court|cbi|customs|narcotics|warrant)\b/i,
+    score: 3,
+    message: "It uses law-enforcement or arrest-related language."
+  },
+  {
+    pattern: /\b(otp|pin|password|cvv|card number|bank details)\b/i,
+    score: 4,
+    message: "It requests or refers to confidential credentials."
+  },
+  {
+    pattern: /\b(safe account|transfer money|pay fine|security deposit)\b/i,
+    score: 4,
+    message: "It requests a suspicious payment or transfer."
+  },
+  {
+    pattern: /\b(anydesk|teamviewer|screen share|remote access)\b/i,
+    score: 4,
+    message: "It may be asking for remote access to your device."
+  },
+  {
+    pattern: /\b(secret|do not tell|stay on the call|confidential)\b/i,
+    score: 3,
+    message: "It attempts to isolate you or demand secrecy."
+  },
+  {
+    pattern: /\b(click|open|verify|login|sign in)\b/i,
+    score: 1,
+    message: "It asks you to click, open or verify something."
+  },
+  {
+    pattern: /(https?:\/\/|www\.|bit\.ly|tinyurl|t\.me)/i,
+    score: 2,
+    message: "It contains a link that should be independently verified."
+  },
+  {
+    pattern: /\b(forward|share this|breaking news|shocking|viral)\b/i,
+    score: 2,
+    message: "It encourages rapid sharing or uses sensational language."
+  }
+];
+
+analyzerForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const text = messageText.value.trim();
+
+  if (!text) {
+    return;
+  }
+
+  let score = 0;
+  const signals = [];
+
+  riskRules.forEach((rule) => {
+    if (rule.pattern.test(text)) {
+      score += rule.score;
+      signals.push(rule.message);
+    }
+  });
+
+  let badgeClass = "safe";
+  let badgeText = "Low detected risk";
+  let title = "No strong scam signals detected";
+  let guidance =
+    "Remain careful. Verify the sender and destination before clicking, paying or sharing information.";
+
+  if (score >= 8) {
+    badgeClass = "danger";
+    badgeText = "High risk";
+    title = "This message shows several scam indicators";
+    guidance =
+      "Do not click links, transfer money, share credentials or continue the call. Verify the claim through an official channel.";
+  } else if (score >= 3) {
+    badgeClass = "warning";
+    badgeText = "Medium risk";
+    title = "This message requires independent verification";
+    guidance =
+      "Pause before responding. Find the organization's official website or phone number independently.";
+  }
+
+  const signalsHtml = signals.length
+    ? `
+      <h4>Detected signals</h4>
+      <ul class="signal-list">
+        ${signals.map((signal) => `<li>${escapeHtml(signal)}</li>`).join("")}
+      </ul>
+    `
+    : `
+      <p>
+        Automated checks can miss sophisticated scams, manipulated media
+        and newly created tactics.
+      </p>
+    `;
+
+  analysisResult.innerHTML = `
+    <span class="status-badge ${badgeClass}">${badgeText}</span>
+    <h3>${title}</h3>
+    <p>${guidance}</p>
+    ${signalsHtml}
+  `;
+});
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+/* Quiz */
+
+const quizQuestions = [
+  {
+    question:
+      "A caller claiming to be a police officer says you are under digital arrest and must stay on a video call. What should you do?",
+    answers: [
+      "Transfer a small amount to prove cooperation",
+      "Stay on the call until the investigation ends",
+      "Disconnect and verify the claim through official channels",
+      "Share your ID so they can clear your name"
+    ],
+    correct: 2,
+    explanation:
+      "Police do not conduct a digital arrest by forcing someone to stay on a video call or transfer money."
+  },
+  {
+    question:
+      "An email asks you to verify your bank account through a shortened link. What is the safest response?",
+    answers: [
+      "Open the link in private browsing",
+      "Reply and ask whether it is genuine",
+      "Forward the email to friends",
+      "Use the bank's official application or manually entered website"
+    ],
+    correct: 3,
+    explanation:
+      "Do not trust contact details or links inside a suspicious message. Reach the organization independently."
+  },
+  {
+    question:
+      "A viral video shows a public figure making a shocking announcement. What should you check first?",
+    answers: [
+      "Whether it has many views",
+      "Whether trusted outlets and original sources confirm it",
+      "Whether your friends have shared it",
+      "Whether the caption uses capital letters"
+    ],
+    correct: 1,
+    explanation:
+      "Popularity is not proof. Check the original source, context, date and independent credible coverage."
+  }
+];
+
+const quizProgress = document.getElementById("quizProgress");
+const quizQuestion = document.getElementById("quizQuestion");
+const quizAnswers = document.getElementById("quizAnswers");
+const quizFeedback = document.getElementById("quizFeedback");
+const nextQuestion = document.getElementById("nextQuestion");
+
+let currentQuestion = 0;
+let quizScore = 0;
+
+function renderQuestion() {
+  const item = quizQuestions[currentQuestion];
+
+  quizProgress.textContent = `Question ${currentQuestion + 1} of ${
+    quizQuestions.length
+  }`;
+
+  quizQuestion.textContent = item.question;
+  quizFeedback.textContent = "";
+  nextQuestion.classList.add("hidden");
+  quizAnswers.innerHTML = "";
+
+  item.answers.forEach((answer, index) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "answer-button";
+    button.textContent = answer;
+
+    button.addEventListener("click", () => selectAnswer(index));
+
+    quizAnswers.appendChild(button);
+  });
+}
+
+function selectAnswer(selectedIndex) {
+  const item = quizQuestions[currentQuestion];
+  const answerButtons = [...quizAnswers.querySelectorAll(".answer-button")];
+
+  answerButtons.forEach((button, index) => {
+    button.disabled = true;
+
+    if (index === item.correct) {
+      button.classList.add("correct");
+    }
+
+    if (index === selectedIndex && selectedIndex !== item.correct) {
+      button.classList.add("incorrect");
+    }
+  });
+
+  if (selectedIndex === item.correct) {
+    quizScore += 1;
+    quizFeedback.textContent = `Correct. ${item.explanation}`;
+  } else {
+    quizFeedback.textContent = `Not quite. ${item.explanation}`;
+  }
+
+  nextQuestion.textContent =
+    currentQuestion === quizQuestions.length - 1
+      ? "View score"
+      : "Next question";
+
+  nextQuestion.classList.remove("hidden");
+}
+
+nextQuestion.addEventListener("click", () => {
+  currentQuestion += 1;
+
+  if (currentQuestion < quizQuestions.length) {
+    renderQuestion();
+    return;
+  }
+
+  quizProgress.textContent = "Quiz complete";
+  quizQuestion.textContent = `You scored ${quizScore} out of ${quizQuestions.length}.`;
+  quizAnswers.innerHTML = "";
+  quizFeedback.textContent =
+    quizScore === quizQuestions.length
+      ? "Excellent. Keep verifying before you click, pay or share."
+      : "Review the warning signs and try again.";
+
+  nextQuestion.textContent = "Restart quiz";
+  nextQuestion.classList.remove("hidden");
+
+  nextQuestion.onclick = () => {
+    currentQuestion = 0;
+    quizScore = 0;
+    nextQuestion.onclick = null;
+    renderQuestion();
+  };
+});
+
+renderQuestion();
+
+/* Incident reports */
+
+const reportForm = document.getElementById("reportForm");
+const formStatus = document.getElementById("formStatus");
+
+reportForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const submitButton = reportForm.querySelector('button[type="submit"]');
+
+  const payload = {
+    category: document.getElementById("category").value,
+    platform: document.getElementById("platform").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    contact: document.getElementById("contact").value.trim()
+  };
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Saving...";
+  formStatus.className = "form-status";
+  formStatus.textContent = "";
+
+  try {
+    const response = await fetch("/api/reports", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "The report could not be saved.");
+    }
+
+    formStatus.className = "form-status success";
+    formStatus.textContent =
+      `Report saved. Reference: ${data.reference}`;
+
+    reportForm.reset();
+    loadStatistics();
+  } catch (error) {
+    formStatus.className = "form-status error";
+    formStatus.textContent = error.message;
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Save report";
+  }
+});
+
+async function loadStatistics() {
+  try {
+    const response = await fetch("/api/stats");
+
+    if (!response.ok) {
+      throw new Error("Statistics request failed.");
+    }
+
+    const data = await response.json();
+
+    document.getElementById("totalReports").textContent = data.total;
+    document.getElementById("phishingReports").textContent =
+      data.categories.phishing;
+    document.getElementById("scamReports").textContent =
+      data.categories["digital-arrest"];
+    document.getElementById("newsReports").textContent =
+      data.categories["fake-news"];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+loadStatistics();
