@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
-const Report = require("./models/Report");
+const Report = require("./Report");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
