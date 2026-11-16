@@ -31,7 +31,7 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
 
 function cleanText(value, maxLength) {
   if (typeof value !== "string") {
